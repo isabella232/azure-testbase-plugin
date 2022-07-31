@@ -1,0 +1,27 @@
+target
+
+# mvn hpi:run
+work
+
+# IntelliJ IDEA project files
+*.iml
+*.iws
+*.ipr
+.idea
+
+# Eclipse project files
+.settings
+.classpath
+.project
+
+# vscode project files
+.vscode
+
+# tem and test files
+tem
+*.py
+# src/test/java/io/jenkins/plugins/azuretestbase/EmptyTest.java
+
+# sensitive info
+src/test/resources/testdata.properties
+src/test/resources/testdata-df.properties

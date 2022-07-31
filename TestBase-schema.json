@@ -1,0 +1,211 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "jenkins_testbase_configuration",
+  "title": "Jenkins TestBase configuration",
+  "description": "Jenkins TestBase plugin configuration schema.",
+  "type": "object",
+  "properties": {
+    "tenantId": {
+      "type": "string",
+      "description": "Azure tenant ID."
+    },
+    "clientId": {
+      "type": "string",
+      "description": "Azure Active Directory application ID."
+    },
+    "subscriptionId": {
+      "type": "string",
+      "description": "Azure subscription ID"
+    },
+    "resourceGroup": {
+      "type": "string",
+      "description": "Azure resource group name"
+    },
+    "testBaseAccount": {
+      "type": "string",
+      "description": "Azure TestBase account name"
+    },
+    "artifact": {
+      "type": "string",
+      "description": "Path of your package for test"
+    },
+    "package": {
+      "type": "object",
+      "description": "The Test Base Package resource.",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "description": "The tags of the resource.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "location": {
+          "type": "string",
+          "description": "The geo-location where the resource lives."
+        },
+        "properties": {
+          "description": "The properties of the Test Base Package.",
+          "type": "object",
+          "properties": {
+            "applicationName": {
+              "type": "string",
+              "description": "Application name"
+            },
+            "version": {
+              "type": "string",
+              "description": "Application version"
+            },
+            "flightingRing": {
+              "type": "string",
+              "description": "The flighting ring for feature update."
+            },
+            "targetOSList": {
+              "type": "array",
+              "description": "Specifies the target OSs of specific OS Update types.",
+              "items": {
+                "type": "object",
+                "description": "The information of the target OS to be tested.",
+                "properties": {
+                  "osUpdateType": {
+                    "type": "string",
+                    "description": "Specifies the OS update type to test against, e.g., 'Security updates' or 'Feature updates'."
+                  },
+                  "targetOSs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Specifies the target OSs to be tested."
+                  },
+                  "baselineOSs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Specifies the baseline OSs to be tested."
+                  }
+                },
+                "required": [
+                  "osUpdateType",
+                  "targetOSs"
+                ]
+              }
+            },
+            "tests": {
+              "type": "array",
+              "description": "The detailed test information.",
+              "items": {
+                "description": "The definition of a Test.",
+                "type": "object",
+                "properties": {
+                  "testType": {
+                    "type": "string",
+                    "description": "The type of the test.",
+                    "enum": [
+                      "OutOfBoxTest",
+                      "FunctionalTest"
+                    ]
+                  },
+                  "isActive": {
+                    "type": "boolean",
+                    "description": "Indicates if this test is active.It doesn't schedule test for not active Test."
+                  },
+                  "commands": {
+                    "type": "array",
+                    "description": "The commands used in the test.",
+                    "items": {
+                      "type": "object",
+                      "description": "The command used in the test",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "The name of the command."
+                        },
+                        "action": {
+                          "type": "string",
+                          "description": "The action of the command.",
+                          "enum": [
+                            "Install",
+                            "Launch",
+                            "Close",
+                            "Uninstall",
+                            "Custom"
+                          ]
+                        },
+                        "contentType": {
+                          "type": "string",
+                          "description": "The type of command content.",
+                          "enum": [
+                            "Inline",
+                            "File",
+                            "Path"
+                          ]
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "The content of the command. The content depends on source type."
+                        },
+                        "runElevated": {
+                          "type": "boolean",
+                          "description": "Specifies whether to run the command as administrator."
+                        },
+                        "restartAfter": {
+                          "type": "boolean",
+                          "description": "Specifies whether to restart the VM after the command executed."
+                        },
+                        "maxRunTime": {
+                          "type": "integer",
+                          "format": "int32",
+                          "description": "Specifies the max run time of the command."
+                        },
+                        "runAsInteractive": {
+                          "type": "boolean",
+                          "description": "Specifies whether to run the command in interactive mode."
+                        },
+                        "alwaysRun": {
+                          "type": "boolean",
+                          "description": "Specifies whether to run the command even if a previous command is failed."
+                        },
+                        "applyUpdateBefore": {
+                          "type": "boolean",
+                          "description": "Specifies whether to apply update before the command."
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "action",
+                        "contentType",
+                        "content"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "testType",
+                  "commands"
+                ]
+              }
+            }
+          },
+          "required": [
+            "applicationName",
+            "version",
+            "flightingRing",
+            "targetOSList",
+            "tests"
+          ]
+        }
+      }
+    }
+  },
+  "required": [
+    "tenantId",
+    "clientId",
+    "subscriptionId",
+    "resourceGroup",
+    "testBaseAccount",
+    "artifact",
+    "package"
+  ]
+}

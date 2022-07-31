@@ -1,0 +1,58 @@
+{
+  "location": "global",
+  "properties": {
+    "applicationName": "java-demo-test-loss",
+    "version": "1.0",
+    "targetOSList": [
+      {
+        "osUpdateType": "Security updates",
+        "targetOSs": [
+          "Windows 11 21H2"
+        ]
+      },
+      {
+        "osUpdateType": "Feature updates",
+        "targetOSs": [
+          "Windows 11 21H2"
+        ]
+      }
+    ],
+    "flightingRing": "Insider Beta Channel",
+    "tests": [
+      {
+        "commands": [
+          {
+            "name": "install",
+            "action": "Install",
+            "contentType": "Path",
+            "content": "scripts/outofbox/install.ps1",
+            "restartAfter": true
+          },
+          {
+            "name": "launch",
+            "action": "Launch",
+            "contentType": "Path",
+            "content": "scripts/outofbox/launch.ps1"
+          },
+          {
+            "name": "close",
+            "action": "Close",
+            "contentType": "Path",
+            "content": "scripts/outofbox/close.ps1"
+          },
+          {
+            "name": "uninstall",
+            "action": "Uninstall",
+            "contentType": "Path",
+            "content": "scripts/outofbox/uninstall.ps1"
+          }
+        ],
+        "testType": "OutOfBoxTest"
+      },
+      {
+        "commands": [],
+        "testType": "FunctionalTest"
+      }
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+<?jelly escape-by-default='true'?>
+<div>
+    This plugin allows user to define steps in free-style jobs or pipleline jobs, which supports to upload project files to Azure TestBase for testing.
+</div>

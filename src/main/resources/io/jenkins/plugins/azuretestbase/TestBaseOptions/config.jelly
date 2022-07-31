@@ -1,0 +1,94 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:entry field="tenantId" title="${%TenantId}">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="clientId" title="${%ClientId}">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="subscriptionId" title="${%SubscriptionId}">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="resourceGroup" title="${%ResourceGroup}">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="testBaseAccount" title="${%TestBaseAccount}">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="artifact" title="${%Artifact}">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="applicationName" title="${%ApplicationName}">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="version" title="${%Version}">
+    <f:textbox/>
+  </f:entry>
+
+  <j:set var="selected" value="selected" />
+  <f:optionalBlock field="securityUpdates" title="${%SecurityUpdates}" checked="${instance == null ? true : instance.isSecurityUpdates()}" inline="true">
+    <f:entry field="securityUpdatesTargetOSs" title="${%SecurityUpdatesTargetOSs}" >
+      <select name="securityUpdatesTargetOSs" multiple="multiple">
+        <j:set var="options" value="${descriptor.doFillSecurityUpdatesTargetOSsItems()}" />
+        <j:set var="selectedList" value="${instance.getSecurityUpdatesTargetOSs()}" />
+        <j:forEach var="option" items="${options}">
+          <option value="${option.value}" selected="${selectedList.contains(option.value) ? selected : null}">${option.name}</option>
+        </j:forEach>
+      </select>
+    </f:entry>
+  </f:optionalBlock>
+
+  <f:optionalBlock field="featureUpdates" title="${%FeatureUpdates}" checked="${instance == null ? false : instance.isFeatureUpdates()}" inline="true">
+    <f:entry field="flightingRing" title="${%FlightingRing}">
+      <f:select />
+    </f:entry>
+    <f:entry field="featureUpdatesTargetOSs" title="${%FeatureUpdatesTargetOSs}" >
+      <select name="featureUpdatesTargetOSs" multiple="multiple">
+        <j:set var="options" value="${descriptor.doFillFeatureUpdatesTargetOSsItems()}" />
+        <j:set var="selectedList" value="${instance.getFeatureUpdatesTargetOSs()}" />
+        <j:forEach var="option" items="${options}">
+          <option value="${option.value}" selected="${selectedList.contains(option.value) ? selected : null}">${option.name}</option>
+        </j:forEach>
+      </select>
+    </f:entry>
+    <f:entry field="featureUpdatesBaselineOSs" title="${%FeatureUpdatesBaselineOSs}" >
+      <select name="featureUpdatesBaselineOSs" multiple="multiple">
+        <j:set var="options" value="${descriptor.doFillFeatureUpdatesBaselineOSsItems()}" />
+        <j:set var="selectedList" value="${instance.getFeatureUpdatesBaselineOSs()}" />
+        <j:forEach var="option" items="${options}">
+          <option value="${option.value}" selected="${selectedList.contains(option.value) ? selected : null}">${option.name}</option>
+        </j:forEach>
+      </select>
+    </f:entry>
+  </f:optionalBlock>
+
+  <f:optionalBlock field="outOfBoxTest" title="${%OutOfBoxTest}" checked="${instance == null ? true : instance.isOutOfBoxTest()}" inline="true">
+    <f:entry field="installScript" title="${%InstallScript}">
+      <f:textbox/>
+    </f:entry>
+    <f:entry field="launchScript" title="${%LaunchScript}">
+      <f:textbox/>
+    </f:entry>
+    <f:entry field="closeScript" title="${%CloseScript}">
+      <f:textbox/>
+    </f:entry>
+    <f:entry field="uninstallScript" title="${%UninstallScript}">
+      <f:textbox/>
+    </f:entry>
+    <f:entry field="restartAfterInstall" title="${%RestartAfterInstall}">
+      <f:checkbox />
+    </f:entry>
+  </f:optionalBlock>
+
+  <f:optionalBlock field="functionalTest" title="${%FunctionalTest}" checked="${instance == null ? false : instance.isFunctionalTest()}" inline="true">
+    <f:entry title="${%FunctionalTestList}">
+      <f:repeatableProperty field="functionalTestList" minimum="1">
+        <f:block>
+          <div align="right">
+            <f:repeatableDeleteButton />
+          </div>
+        </f:block>
+      </f:repeatableProperty>
+    </f:entry>
+  </f:optionalBlock>
+</j:jelly>

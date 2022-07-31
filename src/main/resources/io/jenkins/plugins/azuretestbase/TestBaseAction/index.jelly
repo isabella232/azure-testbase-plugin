@@ -1,0 +1,221 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler">
+    <l:layout title="TestBase"> 
+        <l:side-panel> 
+            <st:include page="sidepanel.jelly" it="${it.run}" optional="true" /> 
+        </l:side-panel>
+        <l:main-panel> 
+            <j:set var="packageEntity" value="${it.getPackage()}" />
+            <div>
+                <h2 class="new-roman">
+                    <a href="${it.getPackageLink()}" target="_blank">Package: ${packageEntity.getProperties().getApplicationName()}-${packageEntity.getProperties().getVersion()}</a> 
+                </h2>
+                <p class="new-roman standard-size">Application name: <span class="status-span">${packageEntity.getProperties().getApplicationName()}</span></p>
+                <p class="new-roman standard-size">Application version: <span class="status-span">${packageEntity.getProperties().getVersion()}</span></p>
+                <p class="new-roman standard-size">Package status: <span class="status-span">${packageEntity.getProperties().getPackageStatus()}</span></p>
+                <p class="new-roman standard-size">Provisioning state: <span class="status-span">${packageEntity.getProperties().getProvisioningState()}</span></p>
+                <p class="new-roman standard-size">Last modified time: <span class="status-span">${packageEntity.getProperties().getLastModifiedTime()}</span></p>
+            </div>
+
+            <div>
+                <h2 class="new-roman">Test matrix</h2>
+                <div class="flex-panel">
+                    <div class="flex-item flex-grow-3">
+                        <j:set var="tests" value="${packageEntity.getProperties().getTests()}" />
+                        <j:forEach var="test" items="${tests}">
+                            <div>
+                                <div class="new-roman standard-size">${test.getTestType()}: <span class="status-span">${test.getValidationRunStatus()}</span></div>
+                                <table class="full-width-table">
+                                    <tr>
+                                        <th>Action</th>
+                                        <th>Name</th>
+                                        <th>Content</th>
+                                    </tr>
+                                    <j:set var="commands" value="${test.getCommands()}" />
+                                    <j:forEach var="command" items="${commands}">
+                                        <tr class="table-hover-line">
+                                            <td>${command.getAction()}</td>
+                                            <td>${command.getName()}</td>
+                                            <td>${command.getContent()}</td>
+                                        </tr>
+                                    </j:forEach>
+                                </table>
+                            </div>
+                            <br />
+                        </j:forEach>
+                    </div>
+                    <div class="flex-item flex-grow-1"></div>
+                    <div class="flex-item flex-grow-2">
+                        <j:set var="targetOSList" value="${packageEntity.getProperties().getTargetOSList()}" />
+                        <j:forEach var="targetOS" items="${targetOSList}">
+                            <div>
+                                <div class="new-roman standard-size">${targetOS.getOsUpdateType()}</div>
+                                <table class="full-width-table">
+                                    <j:set var="targetOSs" value="${targetOS.getTargetOSs()}" />
+                                    <j:forEach var="os" items="${targetOSs}">
+                                        <tr class="table-hover-line">
+                                            <td>${os}</td>
+                                        </tr>
+                                    </j:forEach>
+                                </table>
+                            </div>
+                            <br />
+                        </j:forEach>
+                        <div class="new-roman standard-size">Flighting Ring: <span class="status-span">${packageEntity.getProperties().getFlightingRing()}</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="new-roman">
+                    <a href="${it.getSummaryLink()}" target="_blank">Test summary</a> 
+                </h2>
+                <j:set var="pageTestSummaryResource" value="${it.testSummaries()}" />
+                <j:set var="values" value="${pageTestSummaryResource.getValue()}" />
+                <j:forEach var="value" items="${values}">
+                    <j:set var="properties" value="${value.getProperties()}" />
+                    <j:if test="${properties.getApplicationName() eq packageEntity.getProperties().getApplicationName()}">
+                        <j:if test="${properties.getApplicationVersion() eq packageEntity.getProperties().getVersion()}">
+                            <p class="new-roman standard-size">Execution status: <span class="status-span">${properties.getExecutionStatus()}</span></p>
+                            <!-- <p class="new-roman standard-size">Grade: <span class="status-span">${properties.getGrade()}</span></p> -->
+                            <j:set var="securityUpdatesTestSummary" value="${properties.getSecurityUpdatesTestSummary()}" />
+                            <j:if test="${securityUpdatesTestSummary!=null}">
+                                <h3 class="new-roman">Security updates test summary</h3>
+                                <p class="new-roman standard-size">Execution status: <span class="status-span">${securityUpdatesTestSummary.getExecutionStatus()}</span></p>
+                                <!-- <p class="new-roman standard-size">Grade: <span class="status-span">${securityUpdatesTestSummary.getGrade()}</span></p> -->
+                                <table class="full-width-table">
+                                    <tr>
+                                        <th>OS name</th>
+                                        <th>Test type</th>
+                                        <th>Execution status</th>
+                                        <!-- <th>Grade</th> -->
+                                        <th>Release name</th>
+                                        <th>Test status</th>
+                                        <th>Build version</th>
+                                        <th>Test run time</th>
+                                    </tr>
+                                    <j:set var="osUpdateTestSummaries" value="${securityUpdatesTestSummary.getOsUpdateTestSummaries()}" />
+                                    <j:forEach var="osUpdateTestSummary" items="${osUpdateTestSummaries}">
+                                        <tr class="table-hover-line">
+                                            <td><a href="${it.getSummaryLink()}" target="_blank">${osUpdateTestSummary.getOsName()}</a></td>
+                                            <td>${osUpdateTestSummary.getTestType()}</td>
+                                            <td>${osUpdateTestSummary.getExecutionStatus()}</td>
+                                            <!-- <td>${osUpdateTestSummary.getGrade()}</td> -->
+                                            <td>${osUpdateTestSummary.getReleaseName()}</td>
+                                            <td>${osUpdateTestSummary.getTestStatus()}</td>
+                                            <td>${osUpdateTestSummary.getBuildVersion()}</td>
+                                            <td>${osUpdateTestSummary.getTestRunTime()}</td>
+                                        </tr>
+                                    </j:forEach>
+                                </table>
+                            </j:if>
+                            <j:set var="feautreUpdatesTestSummary" value="${properties.getFeatureUpdatesTestSummary()}" />
+                            <j:if test="${feautreUpdatesTestSummary!=null}">
+                                <h3 class="new-roman">Feature updates test summary</h3>
+                                <p class="new-roman standard-size">Execution status: <span class="status-span">${feautreUpdatesTestSummary.getExecutionStatus()}</span></p>
+                                <!-- <p class="new-roman standard-size">Grade: <span class="status-span">${feautreUpdatesTestSummary.getGrade()}</span></p> -->
+                                <table class="full-width-table">
+                                    <tr>
+                                        <th>OS name</th>
+                                        <th>Test type</th>
+                                        <th>Execution status</th>
+                                        <!-- <th>Grade</th> -->
+                                        <th>Release name</th>
+                                        <th>Test status</th>
+                                        <th>Build version</th>
+                                        <th>Test run time</th>
+                                    </tr>
+                                    <j:set var="osUpdateTestSummaries" value="${feautreUpdatesTestSummary.getOsUpdateTestSummaries()}" />
+                                    <j:forEach var="osUpdateTestSummary" items="${osUpdateTestSummaries}">
+                                        <tr class="table-hover-line">
+                                            <td>${osUpdateTestSummary.getOsName()}</td>
+                                            <td>${osUpdateTestSummary.getTestType()}</td>
+                                            <td>${osUpdateTestSummary.getExecutionStatus()}</td>
+                                            <!-- <td>${osUpdateTestSummary.getGrade()}</td> -->
+                                            <td>${osUpdateTestSummary.getReleaseName()}</td>
+                                            <td>${osUpdateTestSummary.getTestStatus()}</td>
+                                            <td>${osUpdateTestSummary.getBuildVersion()}</td>
+                                            <td>${osUpdateTestSummary.getTestRunTime()}</td>
+                                        </tr>
+                                    </j:forEach>
+                                </table>
+                            </j:if>
+                        </j:if>
+                    </j:if>
+                </j:forEach>
+            </div>
+
+            <div>
+                <h2 class="new-roman">Your plugin configuration</h2>
+                <pre><code class="language-json">${it.configurationJson()}</code></pre>
+            </div>
+
+            <!-- <div>
+                <h2 class="new-roman">package</h2>
+                <pre><code class="language-json">${it.testSummariesJson()}</code></pre>
+            </div> -->
+        </l:main-panel>
+    </l:layout>
+
+    <head>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css" />
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script>
+            hljs.highlightAll();
+        </script>
+        <style>
+            .status-span {
+                background-color: rgb(232, 232, 232);
+                padding: 1px 5px 1px 5px;
+                border-radius: 6px;
+            }
+            .new-roman {
+                font-family: 'Times New Roman', Times, serif;
+            }
+            .standard-size {
+                font-size: 1rem;
+            }
+            .full-width-table {
+                border-top: 1px solid rgb(200, 200, 200);
+                border-bottom: 1px solid rgb(200, 200, 200);
+                border-spacing: 0;
+                border-collapse: collapse;
+                width: 100%;
+            }
+            .full-width-table tr {
+                display: table-row;
+                padding-top: 20px;
+                padding-bottom: 20px;
+                height:35px;
+                font-size: 1rem;
+                line-height: 35px;
+            }
+            .table-hover-line:hover {
+                background-color: rgb(240, 240, 240);
+            }
+            .full-width-table tr td {
+                display: table-cell;
+                text-align: center;
+            }
+            .full-width-table th td {
+                display: table-cell;
+                text-align: center;
+            }
+            .flex-panel {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+                align-items: center;
+            }
+            .flex-grow-3 {
+                flex-grow: 3;
+            }
+            .flex-grow-2 {
+                flex-grow: 3;
+            }
+            .flex-grow-1 {
+                flex-grow: 1;
+            }
+        </style>
+    </head>
+</j:jelly>
