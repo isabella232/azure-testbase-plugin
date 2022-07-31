@@ -1,198 +1,8 @@
-# Project
-
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
-
-As the maintainer of this project, please make a few updates:
-
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
-
-## Contributing
-
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
-
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
-
-## Trademarks
-
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
-
-## Azure: TestBase
-
-## Introduction
+# Azure: TestBase
 
 This plugin allows user to define steps in free-style jobs or pipleline jobs, which supports to onboard predefined packages to Azure TestBase for testing. After the end of the CI/CD process, you can view basic test result in the TestBase panel of build history subpage.
 
-## For developer
-
-### Prerequisites
-
-1. [JDK](https://www.oracle.com/java/technologies/downloads/) , the version of which should be greater than or equal to 8, and can not be Open JDK.
-2. The latest version of [maven](https://www.oracle.com/java/technologies/downloads/).
-
-### Project structure
-
-```
-fhl.jenkins
-|
-|   Jenkinsfile                                    -- pipeline configuration file used in Jenkins
-|   pom.xml                                        -- maven configuration file
-|   TestBase-schema.json                           -- schema of TestBase configuration
-|
-└───src 
-    │
-    └───main
-    |   |
-    │   └───java
-    |   |   |
-    |   |   └───io.jenkins.plugins.azuretestbase
-    |   |       |
-    |   |       |   Configuration.java             -- module for loading configuration
-    |   |       |   FunctionalTest.java            -- storage class of functional test options
-    |   |       |   TestBaseAction.java            -- storage class of TestBase test result view
-    |   |       |   TestBaseBuilder.java           -- extension of freestyle job step and pipeline job step
-    |   |       |   TestBaseOptions.java           -- storage class of TestBase freestyle options
-    |   |       |
-    |   |       └───dm                             -- data model of TestBase request and response
-    |   |       └───exceptions                     -- custom exceptions
-    |   |       └───http                           -- wrapper of httpcore to access TestBase API
-    |   |       └───json                           -- wrapper of jackson convertion
-    |   |
-    |   └───resources
-    |   |   |
-    |   |   |   config.properties                  -- configuration of prod envirionment
-    |   |   |   config-df.properties               -- configuration of dog-food envirionment
-    |   |   |   index.jelly                        -- intructions of plugin
-    |   |   |
-    |   |   └───io.jenkins.plugins.azuretestbase
-    |   |       |
-    |   |       |   Messages.properties            -- static string which are displayed on the interface
-    |   |       |
-    |   |       └───FunctionalTest                 -- frontpage of functional test options
-    |   |       └───TestBaseAction                 -- frontpage of TestBase test result view
-    |   |       └───TestBaseBuilder                -- frontpage of TestBase freestyle step and pipeline step
-    |   |       └───TestBaseOptions                -- frontpage of TestBase freestyle options
-    |   |
-    │   └───webapp                                 -- static resource used for displaying on the interface
-    |
-    └───test
-        |
-        └───java
-        |   └───io.jenkins.plugins.azuretestbase   -- unit test, substructure is the same as 'main/java'
-        |
-        └───resources
-            |
-            |   testdata.properties                -- prod test data used for unit test
-            |   testdata-df.properties             -- dog-food test data used for unit test
-            |   ...                                -- other test data
-```
-
-### Build and Test
-
-1. Clone project and change the work folder.
-
-   ```shell
-   git clone git@ssh.dev.azure.com:v3/jujiang/FHL-Hackathon/fhl.jenkins
-   
-   cd fhl.jenkins
-   ```
-
-2. Verify the project. This step is recommended but not mandatory.
-
-   ```shell
-   mvn clean verify
-   
-   # or verify the project without executing unit test
-   mvn clean verify -DskipTests
-   
-   # or verify the project without generate test classes. The parameters should be "-Dmaven.test.skip=true" in powershell because '.' is a recognized symbol in powershell command.
-   mvn clean verify -Dmaven.test.skip=true
-   ```
-
-3. Run the temporary Jenkins server, and open `localhost:8080/jenkins/` in your browser.
-
-   ```shell
-   mvn clean hpi:run
-   
-   # or run on specified port
-   mvn hpi:run "-Djetty.port=8081"
-   ```
-
-4. Package the Jenkins plugin to an HPI file.
-
-   ```
-   mvn clean package
-   ```
-
-You can also look up other lifecycle provided by hpi plugin at [maven-hpi-plugin](https://jenkinsci.github.io/maven-hpi-plugin/plugin-info.html).
-
-### Upgrade maven parent
-
-It's recommended to upgrade the referenced parent version after the release of new version of the parent pom.
-
-1. Add `settings.xml` to `~/.m2/`, the content reads as follows:
-
-   ```xml
-   <settings>
-     <pluginGroups>
-       <pluginGroup>org.jenkins-ci.tools</pluginGroup>
-     </pluginGroups>
-   
-     <profiles>
-       <!-- Give access to Jenkins plugins -->
-       <profile>
-         <id>jenkins</id>
-         <activation>
-           <activeByDefault>true</activeByDefault> <!-- change this to false, if you don't like to have it on per default -->
-         </activation>
-         <repositories>
-           <repository>
-             <id>repo.jenkins-ci.org</id>
-             <url>https://repo.jenkins-ci.org/public/</url>
-           </repository>
-         </repositories>
-         <pluginRepositories>
-           <pluginRepository>
-             <id>repo.jenkins-ci.org</id>
-             <url>https://repo.jenkins-ci.org/public/</url>
-           </pluginRepository>
-         </pluginRepositories>
-       </profile>
-     </profiles>
-     <mirrors>
-       <mirror>
-         <id>repo.jenkins-ci.org</id>
-         <url>https://repo.jenkins-ci.org/public/</url>
-         <mirrorOf>m.g.o-public</mirrorOf>
-       </mirror>
-     </mirrors>
-   </settings>
-   ```
-
-2. Upgrade parent pom.
-
-   ```shell
-   mvn versions:update-parent
-   ```
-
-## For customer
-
-### Usage
+## Usage
 
 1. Install this plugin on your Jenkins server.
 
@@ -339,13 +149,13 @@ It's recommended to upgrade the referenced parent version after the release of n
 
 9. In the ***Console Output***, you can see the details of onboarding TestBase package, and after the end of job, you can view the basic test result in the TestBase panel.
 
-### Samples
+## Samples
 
 1. Onboard existing package to TestBase: [testbase-package-jenkins](https://github.com/BINGOGO123/testbase-package-jenkins)
 2. Build, package and onboard a simple console application: [testbase-console-jenkins](https://github.com/BINGOGO123/testbase-console-jenkins)
 3. Build, package and onboard a calculator application with UI: [testbase-calculator-jenkins](https://github.com/BINGOGO123/testbase-calculator-jenkins)
 
-### Schema of configuration file
+## Schema of configuration file
 
 You can also look up the schema at [TestBase-schema.json](https://dev.azure.com/jujiang/FHL-Hackathon/_git/fhl.jenkins?path=TestBase-schema.json).
 
@@ -562,6 +372,20 @@ You can also look up the schema at [TestBase-schema.json](https://dev.azure.com/
   ]
 }
 ```
+
+## Trademarks
+
+This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
+trademarks or logos is subject to and must follow 
+[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
+Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
+Any use of third-party trademarks or logos are subject to those third-party's policies.
+
+## Telemetry
+
+azure-testbase-plugin collects usage data and sends it to Microsoft to help improve our products and services. Read our [privacy statement]([http://go.microsoft.com/fwlink/?LinkId=521839](https://nam06.safelinks.protection.outlook.com/?url=http%3A%2F%2Fgo.microsoft.com%2Ffwlink%2F%3FLinkId%3D521839&data=05|01|t-haibinzang%40microsoft.com|d036768adb7e44e005c508da6fa446c1|72f988bf86f141af91ab2d7cd011db47|1|0|637945048603172959|Unknown|TWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D|3000|||&sdata=Z58OX2lKCbNi%2BhCQ8eL7YQPZEvS3wNgRxUqOtpdcbnc%3D&reserved=0)) to learn more.
+
+You can turn off usage data collection in Manage Jenkins -> Configure System -> Azure -> Help make Azure Jenkins plugins better by sending anonymous usage statistics to Azure Application Insights.
 
 ## Reference
 
