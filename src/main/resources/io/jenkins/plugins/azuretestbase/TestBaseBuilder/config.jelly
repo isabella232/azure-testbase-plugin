@@ -1,0 +1,20 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
+    <f:entry field="credentialsId" title="${%Credentials}">
+        <c:select/>
+    </f:entry>
+
+    <f:radioBlock name="useConfigurationFile" value="true" title="${%UseConfigurationFile}" checked="${instance == null ? true : instance.isUseConfigurationFile()}" inline="true" help="/plugin/azure-testbase/help-useConfigurationFile.html">
+        <f:entry title="${%ConfigurationFilePath}" field="configurationFilePath">
+            <f:textbox />
+        </f:entry>
+    </f:radioBlock>
+
+    <f:advanced>
+        <f:radioBlock name="useConfigurationFile" value="false" title="${%UseConfigurationSpecified}" checked="${instance == null ? false : !instance.isUseConfigurationFile()}" inline="true" help="/plugin/azure-testbase/help-useConfigurationSpecified.html">
+            <f:entry title="${%TestBaseOptions}">
+                <f:property field="testBaseOptions" />
+            </f:entry>
+        </f:radioBlock>
+    </f:advanced>
+</j:jelly>

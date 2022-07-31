@@ -1,0 +1,111 @@
+{
+  "tags": {
+    "you name": "good"
+  },
+  "location": "global",
+  "properties": {
+    "applicationName": "java-demo-test",
+    "version": "1.0",
+    "targetOSList": [
+      {
+        "osUpdateType": "Security updates",
+        "targetOSs": [
+          "Windows 11 21H2"
+        ]
+      },
+      {
+        "osUpdateType": "Feature updates",
+        "targetOSs": [
+          "Windows 11 21H2"
+        ]
+      }
+    ],
+    "flightingRing": "Insider Beta Channel",
+    "tests": [
+      {
+        "commands": [
+          {
+            "action": "Install",
+            "alwaysRun": false,
+            "applyUpdateBefore": false,
+            "content": "scripts/outofbox/install.ps1",
+            "contentType": "Path",
+            "maxRunTime": 0,
+            "name": "install",
+            "restartAfter": true,
+            "runAsInteractive": false,
+            "runElevated": false
+          },
+          {
+            "action": "Launch",
+            "alwaysRun": false,
+            "applyUpdateBefore": false,
+            "content": "scripts/outofbox/launch.ps1",
+            "contentType": "Path",
+            "maxRunTime": 0,
+            "name": "launch",
+            "restartAfter": false,
+            "runAsInteractive": false,
+            "runElevated": false
+          },
+          {
+            "action": "Close",
+            "alwaysRun": false,
+            "applyUpdateBefore": false,
+            "content": "scripts/outofbox/close.ps1",
+            "contentType": "Path",
+            "maxRunTime": 0,
+            "name": "close",
+            "restartAfter": false,
+            "runAsInteractive": false,
+            "runElevated": false
+          },
+          {
+            "action": "Uninstall",
+            "alwaysRun": false,
+            "applyUpdateBefore": false,
+            "content": "scripts/outofbox/uninstall.ps1",
+            "contentType": "Path",
+            "maxRunTime": 0,
+            "name": "uninstall",
+            "restartAfter": false,
+            "runAsInteractive": false,
+            "runElevated": false
+          }
+        ],
+        "isActive": true,
+        "testType": "OutOfBoxTest"
+      },
+      {
+        "commands": [
+          {
+            "action": "Custom",
+            "alwaysRun": false,
+            "applyUpdateBefore": true,
+            "content": "scripts/functional/script1.ps1",
+            "contentType": "Path",
+            "maxRunTime": 0,
+            "name": "script1",
+            "restartAfter": true,
+            "runAsInteractive": false,
+            "runElevated": false
+          },
+          {
+            "action": "Custom",
+            "alwaysRun": false,
+            "applyUpdateBefore": false,
+            "content": "scripts/functional/script2.ps1",
+            "contentType": "Path",
+            "maxRunTime": 0,
+            "name": "script2",
+            "restartAfter": true,
+            "runAsInteractive": false,
+            "runElevated": false
+          }
+        ],
+        "isActive": true,
+        "testType": "FunctionalTest"
+      }
+    ]
+  }
+}
